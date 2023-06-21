@@ -1,0 +1,70 @@
+<!--- Copyright 2023 felixApps (https://github.com/felixApps)
+
+Licensed under the MIT License (https://opensource.org/licenses/MIT) --->
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Meme Machine</title>
+    <script src="assets/html2canvas.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/code.getmdl.io_1.3.0_material.blue-light_blue.min.css">
+    <script defer src="assets/code.getmdl.io_1.3.0_material.min.js"></script>
+    </head>
+    <body id="body" onload="addField()">
+        <div class="block left">
+        <h1>Meme Machine</h1>
+        <br>
+        <div id="importimage">
+        <form onsubmit="return false;">Select the image from which you want to assign the text: <br><br>
+        <label for="picture" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary"><i class="material-icons">upload</i> Upload</label><input type="file" id="picture" onchange="update_image('picture')" > or <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" onclick="openModal(1)" id="open-modal-btn"><i class="material-icons">photo_camera</i> take photo</button>.
+        </div>
+        <div id="fieldinputs">
+        <div id="replace_image"></div>
+        <!-- Instead of adding first meme text here, javascript will do that for us :) -->
+        <!--<p class="fieldinputs" id="msginput1" style="display:inline;">Meme Text 1: <div class="mdl-textfield mdl-js-textfield"><input class="mdl-textfield__input" type="text" id="meme_text_1" oninput="update_text(1)" maxlength="70"><label class="mdl-textfield__label" for="meme_text_1">Text</label></div>&nbsp;&nbsp;<button style="display:inline;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" onclick="remove_text(1)"><i class="material-icons">delete</i> Remove</button></p>-->
+        </div>
+        <p class="note">Note: To do a break, type <code><b>&#x3c;&#x62;&#x72;&#x3e;</b></code>. <a href="https://www.w3schools.com/html/html_formatting.asp" target="_blank" class="link">Get more tips</a></p> <!-- idk why I added this -->
+        <div style="display:inline;" id="result">
+        <button onclick="addField();" id="addtextfield" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">
+            <i class="material-icons">add</i> Add Text Field
+        </button>
+        <button id="finished-btn" onclick="fin();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary">
+            <i class="material-icons">done</i> Finish
+        </button>
+        </div>
+        <br>
+        <p><br>&copy; 2023 <a target="_blank" class="link" href="https://github.com/felixApps">felixApps</a>, <a target="_blank" class="link" href="https://opensource.org/licenses/MIT">MIT License</a> &#x7c; &#x26a0;&#xfe0f; <b>Still work in progress!</b> &#x26a0;&#xfe0f; &#x7c; <span class="link" onclick="hideshowCredits(0)">Credits</span></p>
+        <div id="credits">
+            <h3>Credits</h3>
+            <hr>
+            <a target="_blank" class="link" href="https://github.com/niklasvh/html2canvas">html2canvas</a> by <a target="_blank" class="link" href="https://github.com/niklasvh">niklasvh</a> (<a target="_blank" class="link" href="https://github.com/niklasvh/html2canvas/blob/master/LICENSE">MIT License</a>)<br>
+            <a target="_blank" class="link" href="https://github.com/google/material-design-lite">Material Design Lite</a> by <a target="_blank" class="link" href="https://github.com/google">Google</a> (<a target="_blank" class="link" href="https://github.com/google/material-design-lite/blob/mdl-1.x/LICENSE">Apache 2.0 License</a>)<br>
+            <a target="_blank" class="link" href="https://fonts.google.com/">Fonts and Material Icons</a> by <a target="_blank" class="link" href="https://fonts.google.com/">Google Fonts</a> (Standard Font: Roboto) (<a target="_blank" class="link" href="https://developers.google.com/fonts/faq?hl=en#is_there_a_cost_for_any_of_these_fonts">Multiple Licenses</a>, Roboto licensed under <a target="_blank" class="link" href="https://fonts.google.com/specimen/Roboto/about?query=Roboto">Apache 2.0</a>)<br>
+            <a target="_blank" class="link" href="https://en.wikipedia.org/wiki/Impact_(typeface)">Impact Font</a> from <a target="_blank" class="link" href="https://befonts.com/impact-font.html">Befonts</a>  (<a target="_blank" class="link" href="https://befonts.com/free-for-personal-use">Free for Personal Use License</a>)<br><br>
+            &copy; 2023 <a target="_blank" class="link" href="https://github.com/felixApps">felixApps</a>, <a target="_blank" class="link" href="https://opensource.org/licenses/MIT">MIT License</a><br><br>
+            <span class="link" onclick="hideshowCredits(1)">Hide Credits</span>
+        </div>
+        </form>
+        <div class="block right" id="meme">
+        <div id="image"><img id="rawimg" src="assets/placeholder.png" height="500" width="600" draggable="false"></div>
+        </div>
+        <div class="cookie-banner" id="cookie-banner">
+            <p>This website doesn't use cookies.</p>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="cookie-accept"><i class="material-icons">done</i> OK</button>
+          </div>
+<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+          <div id="modal" class="modal">
+            <div id="modal-content" class="modal-content">
+                <span title="Close" class="close-btn">&times;</span>
+                <h2>Take photo</h2>
+                <video id="video" autoplay></video>
+                <br>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary" id="capture"><i class="material-icons">photo_camera</i> Take photo</button>
+            </div>
+            </div>
+    </body> 
+</html> 
